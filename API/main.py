@@ -23,7 +23,7 @@ for rowx in range(sheet.nrows):
     except:
         pass
 degree_points = remain_points.pop()[1]
-
+#
 # Parse student courses from xls
 workbook = xlrd.open_workbook(STUDENT_GRADES_XLS_PATH)
 sheet = workbook.sheet_by_index(STUDENT_GRADES_SHEET_INDEX)
