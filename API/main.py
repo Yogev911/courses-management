@@ -46,9 +46,15 @@ for row in matrix:
     except:
         pass
 
+dept_dict = {}
+for dept_course in dept_courses:
+    dept_dict[dept_course[0]] = [dept_course[1],dept_course[2]]
+
+student_dict = {}
+for student_course in student_courses:
+    student_dict[student_course[0]] = [student_course[1],student_course[2],student_course[3]]
+
 
 #check diff in xls
-for dept_course in dept_courses:
-    for student_course in student_courses:
-        if student_course[0] not in dept_courses:
-            print course[1]
+for d_key,d_val in dept_dict.iteritems():
+    pass
