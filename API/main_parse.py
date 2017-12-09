@@ -4,9 +4,7 @@ DEPT_XLS_SHEET_INDEX = 0
 STUDENT_GRADES_XLS_PATH ='Workbook3.xls'
 STUDENT_GRADES_SHEET_INDEX = 0
 
-class json_handler(object):
-    def __init__(self):
-        pass
+def main():
 
     dept_courses = [] # each course contains [course_number, course_name, course_points]
     remain_points = []
@@ -63,4 +61,6 @@ class json_handler(object):
     #check diff in xls
     for d_key,d_val in dept_dict.iteritems():
         pass
-#
+    #
+if __name__ == '__main__':
+    main()
