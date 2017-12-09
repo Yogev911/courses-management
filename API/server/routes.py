@@ -1,5 +1,5 @@
 from flask import Flask , request , render_template ,jsonify, url_for
-from parse_util import api_handler
+import parse_util
 import os
 
 ALLOWED_EXTENSIONS = set(['xls', 'xlsx'])
@@ -9,7 +9,7 @@ app = Flask(__name__)
 
 @app.route("/getdbjson",methods=['GET'])
 def demo():
-    json = api_handler().return_json_from_db()
+    json = parse_util.return_json_from_db()
     if json is None:
         dict = {'msg':'True'}
         return json.dumps({'msg':'True'})
