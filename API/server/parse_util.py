@@ -2,11 +2,11 @@ import xlrd
 import json
 
 DEPT_XLS_SHEET_INDEX = 0
-STUDENT_GRADES_XLS_PATH = 'temp_student_file.xls'
-DEPT_XLS_PATH = 'temp_dept_file.xlsx'
+STUDENT_GRADES_XLS_PATH = '../data/temp_student_file.xls'
+DEPT_XLS_PATH = '../data/temp_dept_file.xlsx'
 STUDENT_GRADES_SHEET_INDEX = 0
 CONST_JSON_PATH = '../data/dept_info.json'
-STUDENT_JSON_PATH = 'student.json'
+STUDENT_JSON_PATH = '../data/student.json'
 
 
 def return_json_from_db():
