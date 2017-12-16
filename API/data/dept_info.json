@@ -1,0 +1,83 @@
+[
+  {
+    "year" : "A",
+    "courses": [
+      {
+        "name": "bla 1",
+        "points": 3,
+        "course_number": 12345
+      },
+      {
+        "name": "bla 5",
+        "points": 5,
+        "course_number": 9999999
+      },
+      {
+        "name": "bla 9",
+        "points": 3,
+        "course_number": 2345432
+      }
+    ]
+  },
+  {
+    "year" : "B",
+    "courses": [
+      {
+        "name": "bla 1",
+        "points": 3,
+        "course_number": 1111
+      },
+      {
+        "name": "bla 5",
+        "points": 5,
+        "course_number": 778
+      },
+      {
+        "name": "bla 9",
+        "points": 3,
+        "course_number": 21312300
+      }
+    ]
+  },
+  {
+    "year" : "C",
+    "courses": [
+      {
+        "name": "bla 1",
+        "points": 3,
+        "course_number": 213123
+      },
+      {
+        "name": "bla 5",
+        "points": 5,
+        "course_number": 3500165
+      },
+      {
+        "name": "bla 9",
+        "points": 3,
+        "course_number": 21312300
+      }
+    ]
+  },
+  {
+    "year" : "A",
+    "courses": [
+      {
+        "name": "bla 1",
+        "points": 3,
+        "course_number": 213123
+      },
+      {
+        "name": "bla 5",
+        "points": 5,
+        "course_number": 21312312
+      },
+      {
+        "name": "bla 9",
+        "points": 3,
+        "course_number": 21312300
+      }
+    ]
+  }
+]
+
