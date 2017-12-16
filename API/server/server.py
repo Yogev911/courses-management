@@ -1,46 +1,46 @@
 import os
-from flask import Flask, request, redirect, url_for, send_from_directory
+from flask import Flask, request, redirect, url_for, send_from_directory, jsonify
 import werkzeug
+import json
+import parse_util
 
-UPLOAD_FOLDER = 'uploads'
-ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
+ALLOWED_EXTENSIONS = set(['json', 'xls','xlsx'])
 
 app = Flask(__name__)
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 
 def allowed_file(filename):
     # this has changed from the original example because the original did not work for me
-    return filename[-3:].lower() in ALLOWED_EXTENSIONS
+    return str(filename).split('.')[-1].lower() in ALLOWED_EXTENSIONS
 
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/compare', methods=['GET', 'POST'])
 def upload_file():
     if request.method == 'POST':
         file = request.files['file']
-        if file and allowed_file(file.filename):
-            print '**found file', file.filename
-            filename = file.filename
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            # for browser, add 'redirect' function on top of 'url_for'
-            return url_for('uploaded_file',
-                           filename=filename)
-    return '''
-    <!doctype html>
-    <title>Upload new File</title>
-    <h1>Upload new File</h1>
-    <form action="" method=post enctype=multipart/form-data>
-      <p><input type=file name=file>
-         <input type=submit value=Upload>
-    </form>
-    '''
+        filename = file.filename
+        if allowed_file(filename):
+            student_dict = parse_util.parse_xls(file)
+            print student_dict
+            return jsonify(student_dict)
+    return jsonify(json.dumps({'msg': 'True'}))
 
 
-@app.route('/uploads/<filename>')
-def uploaded_file(filename):
-    return send_from_directory(app.config['UPLOAD_FOLDER'],
-                               filename)
+@app.route('/getjson', methods=['GET', 'POST'])
+def get_json():
+    return jsonify(parse_util.return_json_from_db())
+
+@app.route('/setjson', methods=['GET', 'POST'])
+def set_json():
+    if request.method == 'POST':
+        file = request.files['file']
+        filename = file.filename
+        if allowed_file(filename):
+            return jsonify(parse_util.update_json_in_db(file))
+    else:
+        return jsonify(json.dumps({'msg': 'False'}))
+
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host='192.168.1.7', port=8674)
+    app.run(debug=True, host='127.0.0.1', port=8674)
