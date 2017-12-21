@@ -13,6 +13,9 @@ def allowed_file(filename):
     # this has changed from the original example because the original did not work for me
     return str(filename).split('.')[-1].lower() in ALLOWED_EXTENSIONS
 
+@app.route('/', methods=['GET', 'POST'])
+def welcome():
+    return 'Hello!'
 
 @app.route('/compare', methods=['GET', 'POST'])
 def upload_file():
