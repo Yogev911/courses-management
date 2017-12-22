@@ -3,6 +3,8 @@ from flask import Flask, request, redirect, url_for, send_from_directory, jsonif
 import werkzeug
 import json
 import parse_util
+from os import environ
+
 
 ALLOWED_EXTENSIONS = set(['json', 'xls','xlsx'])
 
@@ -48,6 +50,7 @@ def set_json():
 
 
 if __name__ == '__main__':
-    app.run()
+    port = int(environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port)
 
 
