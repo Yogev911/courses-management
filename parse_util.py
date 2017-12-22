@@ -2,11 +2,12 @@ import xlrd
 import json
 
 DEPT_XLS_SHEET_INDEX = 0
-STUDENT_GRADES_XLS_PATH = '../data/temp_student_file.xls'
-DEPT_XLS_PATH = '../data/temp_dept_file.xlsx'
+STUDENT_GRADES_XLS_PATH = 'data/temp_student_file.xls'
+DEPT_XLS_PATH = 'data/temp_dept_file.xlsx'
 STUDENT_GRADES_SHEET_INDEX = 0
-CONST_JSON_PATH = '../data/dept_info.json'
-STUDENT_JSON_PATH = '../data/student.json'
+CONST_JSON_PATH = 'data/dept_info.json'
+STUDENT_JSON_PATH = 'data/student.json'
+DATA_DIFF_JSON = 'data/data_diff.json'
 
 
 def return_json_from_db():
@@ -67,7 +68,7 @@ def parse_xls(xls_file):
         with open(STUDENT_JSON_PATH, 'w') as fp:
             json.dump(student_courses,fp, sort_keys=True, indent=4)
 
-        with open('data_diff.json', 'w') as fp:
+        with open(DATA_DIFF_JSON, 'w') as fp:
             json.dump(data_diff,fp, sort_keys=True, indent=4)
 
 

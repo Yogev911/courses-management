@@ -1,6 +1,6 @@
-from flask import Flask, request, render_template, jsonify, url_for
+from flask import Flask, request, jsonify
+
 import parse_util
-import os
 
 ALLOWED_EXTENSIONS = set(['xls', 'xlsx'])
 
