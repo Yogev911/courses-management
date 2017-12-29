@@ -19,18 +19,21 @@ def return_json_from_db():
         return json.dumps({'msg': 'False e', 'error': e.args})
 
 
+
 def update_json_in_db(updated_courses):
-    def update_json_in_db(updated_courses):
-        try:
-            with open(CONST_JSON_PATH, 'w') as f:
-                binary = updated_courses.read()
-                binary = binary.decode('utf8').replace("'", '"')
-                data = json.loads(binary)
-                s = json.dumps(data, indent=4, sort_keys=True)
-                f.write(s)
-                return json.dumps({'msg': 'True'})
-        except Exception as e:
-            return json.dumps({'msg': 'False', 'error': e.args})
+    try:
+        with open(CONST_JSON_PATH, 'w') as f:
+            binary = updated_courses.read()
+            binary = binary.decode('utf8').replace("'", '"')
+            data = json.loads(binary)
+            if isinstance(data,list):
+                return json.dumps({'msg': 'Data is list'})
+
+            json_fomat = json.dumps(data, indent=4, sort_keys=True)
+            f.write(json_fomat)
+            return json.dumps({'msg': 'True'})
+    except Exception as e:
+        return json.dumps({'msg': 'False', 'error': e.args})
 
 
 def compare_courses(student_courses):
