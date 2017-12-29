@@ -1,6 +1,7 @@
 import xlrd
 import json
 import traceback
+
 DEPT_XLS_SHEET_INDEX = 0
 STUDENT_GRADES_XLS_PATH = 'data/temp_student_file.xls'
 DEPT_XLS_PATH = 'data/temp_dept_file.xlsx'
@@ -33,7 +34,7 @@ def update_json_in_db(updated_courses):
                 if 'year' not in block:
                     raise Exception('key year is missing')
                 if not isinstance(block['year'], str):
-                    raise Exception('value of year must be unicode - your type is {}'.format(type(block['year'])))
+                    raise Exception('value of year must be string - your type is {}'.format(type(block['year'])))
                 if 'courses' not in block:
                     raise Exception('key courses is missing')
                 if not isinstance(block['courses'], list):
@@ -44,18 +45,19 @@ def update_json_in_db(updated_courses):
                     if not all(k in course for k in ('name', 'points', 'course_number')):
                         raise Exception('each course must be have the keys: name ,points, course_number ')
                     if not isinstance(course['name'], str):
-                        raise Exception('value of name must be unicode - your type is {}'.format(type(course)))
+                        raise Exception('value of name must be string - your type is {}'.format(type(course['name'])))
                     if not isinstance(course['points'], int):
-                        raise Exception('value of points must be int - your type is {}'.format(type(course)))
+                        raise Exception('value of points must be int - your type is {}'.format(type(course['points'])))
                     if not isinstance(course['course_number'], int):
-                        raise Exception('value of course_number must be int - your type is {}'.format(type(course)))
+                        raise Exception('value of course_number must be int - your type is {}'.format(
+                            type(course['course_number'])))
 
             return json.dumps({'msg': 'all good'})
             json_fomat = json.dumps(data, indent=4, sort_keys=True)
             f.write(json_fomat)
             return json.dumps({'msg': 'True'})
     except Exception as e:
-        return json.dumps({'msg': 'False', 'error': e.args , 'traceback': traceback.format_exc() })
+        return json.dumps({'msg': 'False', 'error': e.args, 'traceback': traceback.format_exc()})
 
 
 def compare_courses(student_courses):
