@@ -26,6 +26,7 @@ def update_json_in_db(updated_courses):
             binary = updated_courses.read()
             binary = binary.decode('utf8').replace("'", '"')
             data = json.loads(binary)
+            raise Exception('data type is {}'.format(type(data)))
             if not isinstance(data,list):
                 raise Exception('data must be in list format')
             if all(isinstance(item, dict) for item in data):
