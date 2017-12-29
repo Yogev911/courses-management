@@ -27,7 +27,8 @@ def update_json_in_db(updated_courses):
             binary = binary.decode('utf8').replace("'", '"')
             data = json.loads(binary)
             if isinstance(data,list):
-                return json.dumps({'msg': 'Data is list'})
+                if all(isinstance(item, dict) for item in data):
+                    return json.dumps({'msg': 'all blocks are dicts'})
 
             json_fomat = json.dumps(data, indent=4, sort_keys=True)
             f.write(json_fomat)
