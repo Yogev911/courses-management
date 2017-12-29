@@ -16,7 +16,7 @@ def allowed_file(filename):
 
 @app.route('/', methods=['GET', 'POST'])
 def welcome():
-    return 'Hello!'
+    return 'Hello!, new domain!'
 
 @app.route('/index', methods=['GET', 'POST'])
 def index():
