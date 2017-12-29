@@ -55,7 +55,7 @@ def update_json_in_db(updated_courses):
             f.write(json_fomat)
             return json.dumps({'msg': 'True'})
     except Exception as e:
-        return json.dumps({'msg': 'False', 'error': e.args})
+        return json.dumps({'msg': 'False', 'error': e.args , 'traceback': traceback.format_exc})
 
 
 def compare_courses(student_courses):
