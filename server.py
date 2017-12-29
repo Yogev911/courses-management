@@ -18,6 +18,9 @@ def allowed_file(filename):
 def welcome():
     return 'Hello!'
 
+@app.route('/index', methods=['GET', 'POST'])
+def index():
+    return '<h1>This is index!<h1>'
 
 @app.route('/getjson', methods=['GET', 'POST'])
 def get_json():
