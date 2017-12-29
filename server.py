@@ -45,7 +45,6 @@ def upload_file():
         filename = file.filename
         if allowed_file(filename):
             student_dict = parse_util.parse_xls(file)
-            print student_dict
             return jsonify(student_dict)
         else:
             return jsonify(json.dumps({'msg': 'False', 'error': 'this file extension is not supported'}))
