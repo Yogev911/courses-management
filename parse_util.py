@@ -11,17 +11,26 @@ DATA_DIFF_JSON = 'data/data_diff.json'
 
 
 def return_json_from_db():
-    with open(CONST_JSON_PATH, 'r') as fp:
-        data = json.load(fp)
-    return data
+    try:
+        with open(CONST_JSON_PATH, 'r') as fp:
+            data = json.load(fp)
+        return data
+    except Exception as e:
+        return json.dumps({'msg': 'False e', 'error': e.args})
+
 
 def update_json_in_db(updated_courses):
-    try:
-        with open(CONST_JSON_PATH, 'w') as f:
-            f.write(updated_courses.read())
-            return {'msg': 'True'}
-    except Exception as e:
-        return {'msg': 'False' , 'error': e.message}
+    def update_json_in_db(updated_courses):
+        try:
+            with open(CONST_JSON_PATH, 'w') as f:
+                binary = updated_courses.read()
+                binary = binary.decode('utf8').replace("'", '"')
+                data = json.loads(binary)
+                s = json.dumps(data, indent=4, sort_keys=True)
+                f.write(s)
+                return json.dumps({'msg': 'True'})
+        except Exception as e:
+            return json.dumps({'msg': 'False', 'error': e.args})
 
 
 def compare_courses(student_courses):
@@ -32,13 +41,14 @@ def compare_courses(student_courses):
         for year in stored_data:
             for courses in year['courses']:
                 if courses['course_number'] not in student_courses:
-                    diff_courses[courses['course_number']] = {'course_name': courses['name'],'course_points': courses['points']}
+                    diff_courses[courses['course_number']] = {'course_name': courses['name'],
+                                                              'course_points': courses['points']}
         if diff_courses is not None:
-            return diff_courses
+            return json.dumps(diff_courses)
         else:
-            return {'msg': 'True'}
+            return json.dumps({'msg': 'True'})
     except Exception as e:
-        return {'msg': 'False', 'error': e.message}
+        return json.dumps({'msg': 'False', 'error': e.args})
 
 
 def parse_xls(xls_file):
@@ -64,18 +74,16 @@ def parse_xls(xls_file):
 
         data_diff = compare_courses(student_courses)
 
-        #debug only
+        # debug only
         with open(STUDENT_JSON_PATH, 'w') as fp:
-            json.dump(student_courses,fp, sort_keys=True, indent=4)
+            json.dump(student_courses, fp, sort_keys=True, indent=4)
 
         with open(DATA_DIFF_JSON, 'w') as fp:
-            json.dump(data_diff,fp, sort_keys=True, indent=4)
-
+            json.dump(data_diff, fp, sort_keys=True, indent=4)
 
         return json.dumps(data_diff)
     except Exception as e:
-        return {'msg': 'False', 'error': e.message}
-
+        return json.dumps({'msg': 'False', 'error': e.args})
 
 
 def parse_dept_xlsx(dept_xlsx):
@@ -89,18 +97,16 @@ def parse_dept_xlsx(dept_xlsx):
     for rowx in range(sheet.nrows):
         row = sheet.row_values(rowx)
         try:
-            if isinstance(row[0],float) and isinstance(row[3],float):
+            if isinstance(row[0], float) and isinstance(row[3], float):
                 course_number = int(row[0])
                 course_name = row[1]
                 course_points = float(row[3])
                 dept_courses[course_number] = {'course_name': course_name,
                                                'course_points': course_points}
-            elif isinstance(row[3],float):
-                remain_points.append([row[1],float(row[3])])
+            elif isinstance(row[3], float):
+                remain_points.append([row[1], float(row[3])])
         except:
             pass
     degree_points = remain_points.pop()[1]
     #
     # Parse student courses from xls
-
-

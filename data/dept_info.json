@@ -10,7 +10,7 @@
       {
         "name": "bla 5",
         "points": 5,
-        "course_number": 9999999
+        "course_number": 456
       },
       {
         "name": "bla 9",
@@ -30,12 +30,12 @@
       {
         "name": "bla 5",
         "points": 5,
-        "course_number": 778
+        "course_number": 23456
       },
       {
         "name": "bla 9",
         "points": 3,
-        "course_number": 21312300
+        "course_number": 2356
       }
     ]
   },
@@ -55,7 +55,7 @@
       {
         "name": "bla 9",
         "points": 3,
-        "course_number": 21312300
+        "course_number": 1111111
       }
     ]
   },
