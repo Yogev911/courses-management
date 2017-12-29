@@ -26,10 +26,24 @@ def update_json_in_db(updated_courses):
             binary = updated_courses.read()
             binary = binary.decode('utf8').replace("'", '"')
             data = json.loads(binary)
-            if isinstance(data,list):
-                if all(isinstance(item, dict) for item in data):
-                    return json.dumps({'msg': 'all blocks are dicts'})
+            if not isinstance(data,list):
+                raise Exception('data must be in list format')
+            if all(isinstance(item, dict) for item in data):
+                raise Exception('every instance in the list must be dict')
+            for block in data:
+                if 'year' not in block:
+                    raise Exception('key year is missing')
+                if 'courses' not in block:
+                    raise Exception('key courses is missing')
+                if not isinstance(block['courses'], list):
+                    raise Exception('courses must be list')
+                for course in block['courses']:
+                    if not isinstance(course, dict):
+                        raise Exception('each course must be dict')
+                    if not all (k in course for k in ('name','points','course_number')):
+                        raise Exception('each course must be have the keys: name ,points, course_number ')
 
+            return json.dumps({'msg': 'all good'})
             json_fomat = json.dumps(data, indent=4, sort_keys=True)
             f.write(json_fomat)
             return json.dumps({'msg': 'True'})
