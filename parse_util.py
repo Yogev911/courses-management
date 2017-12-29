@@ -27,7 +27,7 @@ def update_json_in_db(updated_courses):
             data = json.loads(binary)
             if not isinstance(data, list):
                 raise Exception('data must be in list format - your type is {}'.format(type(data)))
-            if all(isinstance(item, dict) for item in data):
+            if not all(isinstance(item, dict) for item in data):
                 raise Exception('every instance in the list must be dict')
             for block in data:
                 if 'year' not in block:
