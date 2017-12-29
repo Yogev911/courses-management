@@ -33,7 +33,7 @@ def update_json_in_db(updated_courses):
                 if 'year' not in block:
                     raise Exception('key year is missing')
                 if not isinstance(block['year'], str):
-                    raise Exception('value of year must be unicode - your type is {}'.format(type(course)))
+                    raise Exception('value of year must be unicode - your type is {}'.format(type(block['year'])))
                 if 'courses' not in block:
                     raise Exception('key courses is missing')
                 if not isinstance(block['courses'], list):
