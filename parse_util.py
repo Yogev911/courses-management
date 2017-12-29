@@ -1,6 +1,6 @@
 import xlrd
 import json
-
+import traceback
 DEPT_XLS_SHEET_INDEX = 0
 STUDENT_GRADES_XLS_PATH = 'data/temp_student_file.xls'
 DEPT_XLS_PATH = 'data/temp_dept_file.xlsx'
@@ -55,7 +55,7 @@ def update_json_in_db(updated_courses):
             f.write(json_fomat)
             return json.dumps({'msg': 'True'})
     except Exception as e:
-        return json.dumps({'msg': 'False', 'error': e.args , 'traceback': traceback.format_exc})
+        return json.dumps({'msg': 'False', 'error': e.args , 'traceback': traceback.format_exc() })
 
 
 def compare_courses(student_courses):
