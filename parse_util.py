@@ -43,7 +43,7 @@ def update_json_in_db(updated_courses):
                         raise Exception('each course must be dict - your type is {}'.format(type(course)))
                     if not all(k in course for k in ('name', 'points', 'course_number')):
                         raise Exception('each course must be have the keys: name ,points, course_number ')
-                    if not isinstance(course['name'], unicode):
+                    if not isinstance(course['name'], str):
                         raise Exception('value of name must be unicode - your type is {}'.format(type(course)))
                     if not isinstance(course['points'], int):
                         raise Exception('value of points must be int - your type is {}'.format(type(course)))
