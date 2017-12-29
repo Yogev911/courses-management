@@ -19,16 +19,14 @@ def return_json_from_db():
         return json.dumps({'msg': 'False e', 'error': e.args})
 
 
-
 def update_json_in_db(updated_courses):
     try:
         with open(CONST_JSON_PATH, 'w') as f:
             binary = updated_courses.read()
             binary = binary.decode('utf8').replace("'", '"')
             data = json.loads(binary)
-            raise Exception('data type is {}'.format(type(data)))
-            if not isinstance(data,list):
-                raise Exception('data must be in list format')
+            if not isinstance(data, list):
+                raise Exception('data must be in list format - your type is {}'.format(type(data)))
             if all(isinstance(item, dict) for item in data):
                 raise Exception('every instance in the list must be dict')
             for block in data:
@@ -37,11 +35,11 @@ def update_json_in_db(updated_courses):
                 if 'courses' not in block:
                     raise Exception('key courses is missing')
                 if not isinstance(block['courses'], list):
-                    raise Exception('courses must be list')
+                    raise Exception('courses must be list - your type is {}'.format(type(block['courses'])))
                 for course in block['courses']:
                     if not isinstance(course, dict):
-                        raise Exception('each course must be dict')
-                    if not all (k in course for k in ('name','points','course_number')):
+                        raise Exception('each course must be dict - your type is {}'.format(type(course)))
+                    if not all(k in course for k in ('name', 'points', 'course_number')):
                         raise Exception('each course must be have the keys: name ,points, course_number ')
 
             return json.dumps({'msg': 'all good'})
