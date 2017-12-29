@@ -32,6 +32,8 @@ def update_json_in_db(updated_courses):
             for block in data:
                 if 'year' not in block:
                     raise Exception('key year is missing')
+                if not isinstance(block['year'], unicode):
+                    raise Exception('value of year must be unicode - your type is {}'.format(type(course)))
                 if 'courses' not in block:
                     raise Exception('key courses is missing')
                 if not isinstance(block['courses'], list):
@@ -41,6 +43,12 @@ def update_json_in_db(updated_courses):
                         raise Exception('each course must be dict - your type is {}'.format(type(course)))
                     if not all(k in course for k in ('name', 'points', 'course_number')):
                         raise Exception('each course must be have the keys: name ,points, course_number ')
+                    if not isinstance(course['name'], unicode):
+                        raise Exception('value of name must be unicode - your type is {}'.format(type(course)))
+                    if not isinstance(course['points'], int):
+                        raise Exception('value of points must be int - your type is {}'.format(type(course)))
+                    if not isinstance(course['course_number'], int):
+                        raise Exception('value of course_number must be int - your type is {}'.format(type(course)))
 
             return json.dumps({'msg': 'all good'})
             json_fomat = json.dumps(data, indent=4, sort_keys=True)
