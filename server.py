@@ -18,9 +18,11 @@ def allowed_file(filename):
 def welcome():
     return 'Hello!, new domain!'
 
+
 @app.route('/index', methods=['GET', 'POST'])
 def index():
     return '<h1>This is index!<h1>'
+
 
 @app.route('/getjson', methods=['GET', 'POST'])
 def get_json():
@@ -34,8 +36,9 @@ def set_json():
         filename = file.filename
         if allowed_file(filename):
             return jsonify(parse_util.update_json_in_db(file))
+        return jsonify(json.dumps({'msg': 'are you trying to fuck up my server? send me only json/xls/xlsx files!'}))
     else:
-        return jsonify(json.dumps({'msg': 'False'}))
+        return jsonify(json.dumps({'msg': 'dude this is POST only!@'}))
 
 
 @app.route('/compare', methods=['GET', 'POST'])
@@ -45,10 +48,10 @@ def upload_file():
         filename = file.filename
         if allowed_file(filename):
             student_dict = parse_util.parse_xls(file)
-            return jsonify(student_dict)
+            return student_dict
         else:
             return jsonify(json.dumps({'msg': 'False', 'error': 'this file extension is not supported'}))
-    return jsonify(json.dumps({'msg': 'True'}))
+    return jsonify(json.dumps({'msg': 'dude this is POST only!@'}))
 
 
 if __name__ == '__main__':

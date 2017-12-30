@@ -9,6 +9,7 @@ STUDENT_GRADES_SHEET_INDEX = 0
 CONST_JSON_PATH = 'data/dept_info.json'
 STUDENT_JSON_PATH = 'data/student.json'
 DATA_DIFF_JSON = 'data/data_diff.json'
+OK_MESSAGE = json.dumps({'msg': 'True'})
 
 
 def return_json_from_db():
@@ -17,7 +18,7 @@ def return_json_from_db():
             data = json.load(fp)
         return data
     except Exception as e:
-        return json.dumps({'msg': 'False e', 'error': e.args})
+        return json.dumps({'msg': 'False', 'error': e.args, 'traceback': traceback.format_exc()})
 
 
 def update_json_in_db(updated_courses):
@@ -26,39 +27,45 @@ def update_json_in_db(updated_courses):
             binary = updated_courses.read()
             binary = binary.decode('utf8').replace("'", '"')
             data = json.loads(binary)
-            if not isinstance(data, list):
-                raise Exception('data must be in list format - your type is {}'.format(type(data)))
-            if not all(isinstance(item, dict) for item in data):
-                raise Exception('every instance in the list must be dict')
-            for block in data:
-                if 'year' not in block:
-                    raise Exception('key year is missing')
-                if not isinstance(block['year'], str):
-                    raise Exception('value of year must be string - your type is {}'.format(type(block['year'])))
-                if 'courses' not in block:
-                    raise Exception('key courses is missing')
-                if not isinstance(block['courses'], list):
-                    raise Exception('courses must be list - your type is {}'.format(type(block['courses'])))
-                for course in block['courses']:
-                    if not isinstance(course, dict):
-                        raise Exception('each course must be dict - your type is {}'.format(type(course)))
-                    if not all(k in course for k in ('name', 'points', 'course_number')):
-                        raise Exception('each course must be have the keys: name ,points, course_number ')
-                    if not isinstance(course['name'], str):
-                        raise Exception(
-                            'value of name must be string - your type is {}'.format(type(course['name']).__name__))
-                    if not isinstance(course['points'], int):
-                        raise Exception('value of points must be int - your type is {}'.format(type(course['points'])))
-                    if not isinstance(course['course_number'], int):
-                        raise Exception('value of course_number must be int - your type is {}'.format(
-                            type(course['course_number'])))
+            verify_json_structure(data)
 
-            return json.dumps({'msg': 'all good'})
             json_fomat = json.dumps(data, indent=4, sort_keys=True)
             f.write(json_fomat)
-            return json.dumps({'msg': 'True'})
+            return OK_MESSAGE
     except Exception as e:
         return json.dumps({'msg': 'False', 'error': e.args, 'traceback': traceback.format_exc()})
+
+
+def verify_json_structure(data):
+    if not isinstance(data, list):
+        raise Exception('data must be in list format - your type is {}'.format(type(data).__name__))
+    if not all(isinstance(item, dict) for item in data):
+        raise Exception('every instance in the list must be dict')
+    for block in data:
+        if 'year' not in block:
+            raise Exception('key year is missing')
+        if not isinstance(block['year'], str):
+            raise Exception(
+                'value of year must be string - your type is {}'.format(type(block['year']).__name__))
+        if 'courses' not in block:
+            raise Exception('key courses is missing')
+        if not isinstance(block['courses'], list):
+            raise Exception('courses must be list - your type is {}'.format(type(block['courses']).__name__))
+        for course in block['courses']:
+            if not isinstance(course, dict):
+                raise Exception('each course must be dict - your type is {}'.format(type(course).__name__))
+            if not all(k in course for k in ('name', 'points', 'course_number')):
+                raise Exception('each course must be have the keys: name ,points, course_number ')
+            if not isinstance(course['name'], str):
+                raise Exception(
+                    'value of name must be string - your type is {}'.format(type(course['name']).__name__))
+            if not isinstance(course['points'], int):
+                raise Exception(
+                    'value of points must be int - your type is {}'.format(type(course['points']).__name__))
+            if not isinstance(course['course_number'], int):
+                raise Exception('value of course_number must be int - your type is {}'.format(
+                    type(course['course_number']).__name__))
+    return True
 
 
 def compare_courses(student_courses):
@@ -74,9 +81,9 @@ def compare_courses(student_courses):
         if diff_courses is not None:
             return json.dumps(diff_courses)
         else:
-            return json.dumps({'msg': 'True'})
+            return OK_MESSAGE
     except Exception as e:
-        return json.dumps({'msg': 'False', 'error': e.args})
+        return json.dumps({'msg': 'False', 'error': e.args, 'traceback': traceback.format_exc()})
 
 
 def parse_xls(xls_file):
@@ -111,13 +118,13 @@ def parse_xls(xls_file):
 
         return json.dumps(data_diff)
     except Exception as e:
-        return json.dumps({'msg': 'False', 'error': e.args})
+        return json.dumps({'msg': 'False', 'error': e.args, 'traceback': traceback.format_exc()})
 
 
 def parse_dept_xlsx(dept_xlsx):
-    dept_courses = {}
+    dept_courses = []
     remain_points = []
-    matrix = []
+    all_courses = []
     with open(DEPT_XLS_PATH, 'w') as f:
         f.write(dept_xlsx.read())
     workbook = xlrd.open_workbook(DEPT_XLS_PATH)
@@ -129,12 +136,13 @@ def parse_dept_xlsx(dept_xlsx):
                 course_number = int(row[0])
                 course_name = row[1]
                 course_points = float(row[3])
-                dept_courses[course_number] = {'course_name': course_name,
-                                               'course_points': course_points}
+                dept_courses.append({'name': course_name,'points': course_points, 'course_number': course_number})
             elif isinstance(row[3], float):
                 remain_points.append([row[1], float(row[3])])
         except:
             pass
     degree_points = remain_points.pop()[1]
+    dept_courses.append({'remain_points':remain_points,'degree_points':degree_points})
+    return dept_courses
     #
     # Parse student courses from xls
