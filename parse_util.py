@@ -114,6 +114,7 @@ def parse_xls(xls_file):
                                         'course_grade': student_course_grade})
             except:
                 pass
+        return OK_MESSAGE
         return student_courses
         data_diff = compare_courses(student_courses)
 
