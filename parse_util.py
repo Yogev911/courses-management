@@ -91,6 +91,8 @@ def parse_xls(xls_file):
     try:
         student_courses = []
         with open(STUDENT_GRADES_XLS_PATH, 'w') as f:
+            raise Exception(
+                'xls_file type {} , xls_file.read() type'.format(type(xls_file).__name__, type(xls_file.read).__name__))
             f.write(xls_file.read())
 
         workbook = xlrd.open_workbook(STUDENT_GRADES_XLS_PATH)
