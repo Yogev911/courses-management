@@ -108,6 +108,7 @@ def parse_xls(xls_file):
                 student_course_name = row[19]
                 student_course_grade = row[5]
                 student_course_points = row[6]
+                raise Exception('{} {} {} {}'.format(student_course_num,student_course_name, student_course_grade,student_course_points))
                 student_courses.append({'course_number': student_course_num,
                                         'course_name': student_course_name,
                                         'course_points': student_course_points,
