@@ -89,7 +89,6 @@ def compare_courses(student_courses):
 def parse_xls(xls_file):
     # Parse student courses from xls
     try:
-        xls_file.save(STUDENT_GRADES_XLS_PATH)
         student_courses = []
         # with open(STUDENT_GRADES_XLS_PATH, 'w') as f:
         #     binary = xls_file.read()

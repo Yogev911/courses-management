@@ -1,4 +1,6 @@
 import json
+from werkzeug.utils import secure_filename
+
 import parse_util
 from flask_cors import CORS
 from flask import Flask, request, jsonify
@@ -47,6 +49,7 @@ def upload_file():
         file = request.files['file']
         filename = file.filename
         if allowed_file(filename):
+            file.save(secure_filename(parse_util.STUDENT_GRADES_XLS_PATH))
             student_dict = parse_util.parse_xls(file)
             return student_dict
         else:
