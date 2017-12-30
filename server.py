@@ -1,6 +1,6 @@
 import json
 from werkzeug.utils import secure_filename
-
+import pandas as pd
 import parse_util
 from flask_cors import CORS
 from flask import Flask, request, jsonify
@@ -46,11 +46,12 @@ def set_json():
 @app.route('/compare', methods=['GET', 'POST'])
 def upload_file():
     if request.method == 'POST':
-        file = request.files['file']
-        filename = file.filename
+        f = request.files['file']
+        filename = f.filename
         if allowed_file(filename):
-            file.save(secure_filename(parse_util.STUDENT_GRADES_XLS_PATH))
-            student_dict = parse_util.parse_xls(file)
+            data_xls = pd.read_excel(f)
+            return data_xls.to_html()
+            student_dict = parse_util.parse_xls(f)
             return student_dict
         else:
             return jsonify(json.dumps({'msg': 'False', 'error': 'this file extension is not supported'}))
