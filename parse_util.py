@@ -114,6 +114,7 @@ def parse_xls(xls_file):
                                         'course_grade': student_course_grade})
             except:
                 pass
+        print student_courses
         return json.dumps(student_courses[0])
         data_diff = compare_courses(student_courses)
 
