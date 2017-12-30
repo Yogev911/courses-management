@@ -45,7 +45,8 @@ def update_json_in_db(updated_courses):
                     if not all(k in course for k in ('name', 'points', 'course_number')):
                         raise Exception('each course must be have the keys: name ,points, course_number ')
                     if not isinstance(course['name'], str):
-                        raise Exception('value of name must be string - your type is {}'.format(type(course['name'])))
+                        raise Exception(
+                            'value of name must be string - your type is {}'.format(type(course['name']).__name__))
                     if not isinstance(course['points'], int):
                         raise Exception('value of points must be int - your type is {}'.format(type(course['points'])))
                     if not isinstance(course['course_number'], int):
