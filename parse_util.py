@@ -88,10 +88,11 @@ def compare_courses(student_courses):
 
 def parse_xls(xls_file):
     # Parse student courses from xls
-    student_courses = {}
-    with open(STUDENT_GRADES_XLS_PATH, 'w') as f:
-        f.write(xls_file.read())
     try:
+        student_courses = []
+        with open(STUDENT_GRADES_XLS_PATH, 'w') as f:
+            f.write(xls_file.read())
+
         workbook = xlrd.open_workbook(STUDENT_GRADES_XLS_PATH)
         sheet = workbook.sheet_by_index(STUDENT_GRADES_SHEET_INDEX)
         for rowx in range(sheet.nrows):
@@ -101,12 +102,13 @@ def parse_xls(xls_file):
                 student_course_name = row[19]
                 student_course_grade = row[5]
                 student_course_points = row[6]
-                student_courses[student_course_num] = {'course_name': student_course_name,
-                                                       'course_points': student_course_points,
-                                                       'course_grade': student_course_grade}
+                student_courses.append({'course_number': student_course_num,
+                                        'course_name': student_course_name,
+                                        'course_points': student_course_points,
+                                        'course_grade': student_course_grade})
             except:
                 pass
-
+        return student_courses
         data_diff = compare_courses(student_courses)
 
         # debug only
@@ -136,13 +138,13 @@ def parse_dept_xlsx(dept_xlsx):
                 course_number = int(row[0])
                 course_name = row[1]
                 course_points = float(row[3])
-                dept_courses.append({'name': course_name,'points': course_points, 'course_number': course_number})
+                dept_courses.append({'name': course_name, 'points': course_points, 'course_number': course_number})
             elif isinstance(row[3], float):
                 remain_points.append([row[1], float(row[3])])
         except:
             pass
     degree_points = remain_points.pop()[1]
-    dept_courses.append({'remain_points':remain_points,'degree_points':degree_points})
+    dept_courses.append({'remain_points': remain_points, 'degree_points': degree_points})
     return dept_courses
     #
     # Parse student courses from xls
