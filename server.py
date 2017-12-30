@@ -1,9 +1,10 @@
 import json
 from werkzeug.utils import secure_filename
-import pandas as pd
 import parse_util
 from flask_cors import CORS
 from flask import Flask, request, jsonify
+import pandas as pd
+
 
 ALLOWED_EXTENSIONS = set(['json', 'xls', 'xlsx'])
 
@@ -49,8 +50,6 @@ def upload_file():
         f = request.files['file']
         filename = f.filename
         if allowed_file(filename):
-            data_xls = pd.read_excel(f)
-            return data_xls.to_html()
             student_dict = parse_util.parse_xls(f)
             return student_dict
         else:

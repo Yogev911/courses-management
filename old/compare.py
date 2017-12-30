@@ -1,7 +1,7 @@
 import requests
 
 #http://docs.python-requests.org/en/latest/user/quickstart/#post-a-multipart-encoded-file
-url = "https://shenkar-se.herokuapp.com/compare"
+url = "http://127.0.0.1:5000/compare"
 fin = open('/Users/yogev/Desktop/test1.xls', 'rb')
 files = {'file': fin}
 try:

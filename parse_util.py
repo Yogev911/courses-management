@@ -1,6 +1,7 @@
 import xlrd
 import json
 import traceback
+import pandas as pd
 
 DEPT_XLS_SHEET_INDEX = 0
 STUDENT_GRADES_XLS_PATH = 'data/temp_student_file.xls'
@@ -69,15 +70,30 @@ def verify_json_structure(data):
 
 
 def compare_courses(student_courses):
-    diff_courses = {}
+    diff_courses = []
+    done_courses = []
+    output = {}
     try:
         with open(CONST_JSON_PATH, 'r') as fp:
             stored_data = json.load(fp)
         for year in stored_data:
-            for courses in year['courses']:
-                if courses['course_number'] not in student_courses:
-                    diff_courses[courses['course_number']] = {'course_name': courses['name'],
-                                                              'course_points': courses['points']}
+            for dept_course in year['courses']:
+                for student_course in student_courses:
+                    if student_course['course_number'] in dept_course['course_number']:
+                        done_courses.append({'course_name': dept_course['name'],
+                                             'course_number': dept_course['course_number'],
+                                             'course_points': dept_course['points']
+                                             })
+        for student_course in student_courses:
+            if student_course not in done_courses:
+                diff_courses.append(student_course)
+
+        output['total_courses'] = student_courses
+        output['diff_courses'] = diff_courses
+        output['done_courses'] = done_courses
+
+        print output
+
         if diff_courses is not None:
             return json.dumps(diff_courses)
         else:
@@ -90,33 +106,11 @@ def parse_xls(xls_file):
     # Parse student courses from xls
     try:
         student_courses = []
-        # with open(STUDENT_GRADES_XLS_PATH, 'w') as f:
-        #     binary = xls_file.read()
-        #     binary = binary.decode('utf8')
-        #     raise Exception('xls_file : {} , xls_file.read() : {} , binary : {}'.format(type(xls_file).__name__,
-        #                                                                                 type(xls_file.read()).__name__,
-        #                                                                                 type(binary).__name__))
-        #     f.write(xls_file.read())
-
+        xls_file.save(STUDENT_GRADES_XLS_PATH)
         workbook = xlrd.open_workbook(STUDENT_GRADES_XLS_PATH)
         sheet = workbook.sheet_by_index(STUDENT_GRADES_SHEET_INDEX)
-        for rowx in range(sheet.nrows):
-            row = sheet.row_values(rowx)
-            try:
-                student_course_num = int(row[32].encode('ascii').split('-')[1])
-                student_course_name = row[19]
-                student_course_grade = row[5]
-                student_course_points = row[6]
-                raise Exception('{} {} {} {}'.format(student_course_num,student_course_name, student_course_grade,student_course_points))
-                student_courses.append({'course_number': student_course_num,
-                                        'course_name': student_course_name,
-                                        'course_points': student_course_points,
-                                        'course_grade': student_course_grade})
-            except:
-                pass
-        raise Exception('student_courses val is {}'.format(student_courses))
-        return json.dumps(student_courses)
-        return json.dumps(student_courses[0])
+        get_courses_val(sheet, student_courses)
+        # raise Exception('student_courses val is {}'.format(student_courses))
         data_diff = compare_courses(student_courses)
 
         # debug only
@@ -129,6 +123,22 @@ def parse_xls(xls_file):
         return json.dumps(data_diff)
     except Exception as e:
         return json.dumps({'msg': 'False', 'error': e.args, 'traceback': traceback.format_exc()})
+
+
+def get_courses_val(sheet, student_courses):
+    for rowx in range(sheet.nrows):
+        row = sheet.row_values(rowx)
+        try:
+            student_course_num = int(row[32].encode('ascii').split('-')[1])
+            student_course_name = row[19]
+            student_course_grade = row[5]
+            student_course_points = row[6]
+            student_courses.append({'course_name': student_course_name,
+                                    'course_points': student_course_points,
+                                    'course_number': student_course_num,
+                                    'course_grade': student_course_grade})
+        except:
+            pass
 
 
 def parse_dept_xlsx(dept_xlsx):
